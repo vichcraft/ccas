@@ -1,0 +1,8 @@
+# Compiled binaries
+ccaas-server
+storage-server
+*.exe
+
+# Go build cache
+/bin/
+/vendor/

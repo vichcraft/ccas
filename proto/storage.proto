@@ -1,0 +1,39 @@
+syntax = "proto3";
+package ccas;
+option go_package = "github.com/vichcraft/ccas/proto/ccaspb";
+
+service StorageService {
+  rpc Get(GetRequest) returns (GetResponse);
+  rpc ApplyCommit(ApplyCommitRequest) returns (ApplyCommitResponse);
+  rpc LoadInitialData(LoadInitialDataRequest) returns (LoadInitialDataResponse);
+  rpc DumpState(DumpStateRequest) returns (DumpStateResponse);
+}
+
+message GetRequest { string key = 1; }
+message GetResponse {
+  string value = 1;
+  uint64 version = 2;
+  bool found = 3;
+}
+
+message CommitWrite {
+  string key = 1;
+  string value = 2;
+  uint64 new_version = 3;
+}
+message ApplyCommitRequest {
+  uint64 commit_seq = 1;
+  string txn_id = 2;
+  repeated CommitWrite writes = 3;
+}
+message ApplyCommitResponse { string error = 1; }
+
+message LoadInitialDataRequest { map<string, string> data = 1; }
+message LoadInitialDataResponse {}
+
+message DumpStateRequest {}
+message DumpStateEntry {
+  string value = 1;
+  uint64 version = 2;
+}
+message DumpStateResponse { map<string, DumpStateEntry> entries = 1; }

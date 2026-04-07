@@ -36,6 +36,25 @@ func NewImmediateCertifier(store storage.Store) *ImmediateCertifier {
 	}
 }
 
+// SyncFromStorage re-initializes the version map from the current storage state.
+func (c *ImmediateCertifier) SyncFromStorage() {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	state := c.store.DumpState()
+	c.latestVersion = make(map[string]uint64, len(state))
+	var maxVersion uint64
+	for key, result := range state {
+		c.latestVersion[key] = result.Version
+		if result.Version > maxVersion {
+			maxVersion = result.Version
+		}
+	}
+	if maxVersion > c.commitSeq {
+		c.commitSeq = maxVersion
+	}
+}
+
 // SubmitCommit validates a transaction's read set and, if valid, commits its writes.
 func (c *ImmediateCertifier) SubmitCommit(req types.TxnRequest) types.TxnResult {
 	c.mu.Lock()

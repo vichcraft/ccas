@@ -1,0 +1,31 @@
+syntax = "proto3";
+package ccas;
+option go_package = "github.com/vichcraft/ccas/proto/ccaspb";
+
+service CertifierService {
+  rpc SubmitCommit(SubmitCommitRequest) returns (SubmitCommitResponse);
+  rpc SyncFromStorage(SyncFromStorageRequest) returns (SyncFromStorageResponse);
+}
+
+message SyncFromStorageRequest {}
+message SyncFromStorageResponse {}
+
+message ReadEntry {
+  string key = 1;
+  uint64 version_seen = 2;
+}
+message WriteEntry {
+  string key = 1;
+  string value = 2;
+}
+message SubmitCommitRequest {
+  string txn_id = 1;
+  repeated ReadEntry read_set = 2;
+  repeated WriteEntry write_set = 3;
+}
+message SubmitCommitResponse {
+  string txn_id = 1;
+  bool committed = 2;
+  uint64 commit_seq = 3;
+  string reason = 4;
+}
