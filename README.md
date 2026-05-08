@@ -1,15 +1,15 @@
 # CCaaS — Certification-as-a-Service Prototype
 
 A Go implementation of the three-layer **Certification-as-a-Service** architecture from
-*"Don't Look Back, Look into the Future: Certification-as-a-Service Transactions"*
+_"Don't Look Back, Look into the Future: Certification-as-a-Service Transactions"_
 (Aguilera et al.). The system disaggregates a transactional KV system into three independent
 processes that communicate over gRPC:
 
-| Layer       | Binary           | Default port | Responsibility                                                |
-|-------------|------------------|--------------|---------------------------------------------------------------|
-| Storage     | `storage-server` | `:50051`     | In-memory KV store, single source of truth                    |
-| Certifier   | `ccaas-server`   | `:50052`     | Optimistic concurrency control (immediate or epoch-batched)   |
-| Client      | `demo` (or YCSB) | —            | Runs transactions, talks to both layers                       |
+| Layer     | Binary           | Default port | Responsibility                                              |
+| --------- | ---------------- | ------------ | ----------------------------------------------------------- |
+| Storage   | `storage-server` | `:50051`     | In-memory KV store, single source of truth                  |
+| Certifier | `ccaas-server`   | `:50052`     | Optimistic concurrency control (immediate or epoch-batched) |
+| Client    | `demo` (or YCSB) | —            | Runs transactions, talks to both layers                     |
 
 The companion paper PDF is at [`CCaS_Paper.pdf`](CCaS_Paper.pdf) and a mapping from paper to
 code lives in [`paper-vs-implementation.md`](paper-vs-implementation.md).
@@ -108,30 +108,3 @@ proto/ccaspb/       # gRPC service definitions
 scripts/            # local-* helpers (this README) and cloud orchestration
 terraform/          # GCP provisioning for the cloud benchmark (optional)
 ```
-
----
-
-## Cloud deployment (optional, not needed for grading)
-
-The system was also evaluated on GCP with each of the three layers pinned to its own VM,
-using YCSB to drive realistic workloads. That path requires a GCP account, billing,
-Terraform, and a couple of hours of orchestration, so it is **not** required to validate
-the implementation. If you are curious, see:
-
-- [`cloud-deployment.md`](cloud-deployment.md) — overview
-- [`cloud-deployment-gcp.md`](cloud-deployment-gcp.md) — GCP/Terraform walkthrough
-- [`cloud-deployment-ycsb.md`](cloud-deployment-ycsb.md) — YCSB workload runner
-- [`ycsb-results.md`](ycsb-results.md) — the numbers we obtained
-
-The cloud workflow is exposed via the same `Makefile` (`make tf-apply build deploy start
-load matrix pull`); run `make help` to see all targets.
-
----
-
-## Troubleshooting
-
-- **`port 50051 already in use`** — run `make local-stop`, or `lsof -iTCP:50051` to find
-  the offending process.
-- **`make local-smoke` fails with a connection error** — the servers exited; check
-  `local-logs/storage.log` and `local-logs/ccaas.log` for the cause.
-- **Wrong Go version** — `go version` should report 1.25 or newer (see `go.mod`).
