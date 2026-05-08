@@ -1,8 +1,24 @@
 # Compiled binaries
-ccaas-server
-storage-server
+/ccaas-server
+/storage-server
 *.exe
 
 # Go build cache
 /bin/
 /vendor/
+
+# Cross-compiled artifacts and pulled results
+/build/
+/results/
+
+# Local Make config (contains private SSH key path)
+Makefile.env
+
+# Captured terraform output
+/terraform/.env.json
+
+# Local-run logs and pidfiles
+/local-logs/
+
+# macOS
+.DS_Store

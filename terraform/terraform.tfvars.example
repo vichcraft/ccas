@@ -1,0 +1,5 @@
+region        = "us-west-1"
+aws_profile   = "default"         # one of: aws configure list-profiles
+instance_type = "t3.medium"
+key_name      = "my-keypair"      # name of a key pair you've already created in EC2 (in this region)
+ssh_cidr      = "203.0.113.42/32" # your public IP — find it with: curl ifconfig.me

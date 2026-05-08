@@ -23,8 +23,16 @@ func main() {
 	epochMs := flag.Int("epoch-ms", 0, "epoch duration in ms (0 = immediate mode)")
 	flag.Parse()
 
-	// Connect to storage server.
-	storageConn, err := grpc.NewClient(*storageAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	// Connect to storage server. The 256MB ceiling lets DumpState carry full
+	// state for ~1M-record workloads (each YCSB record is ~150 bytes).
+	const maxMsg = 256 * 1024 * 1024
+	storageConn, err := grpc.NewClient(*storageAddr,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithDefaultCallOptions(
+			grpc.MaxCallSendMsgSize(maxMsg),
+			grpc.MaxCallRecvMsgSize(maxMsg),
+		),
+	)
 	if err != nil {
 		log.Fatalf("failed to connect to storage at %s: %v", *storageAddr, err)
 	}
@@ -46,7 +54,7 @@ func main() {
 		log.Println("Using immediate certification")
 	}
 
-	srv := grpc.NewServer()
+	srv := grpc.NewServer(grpc.MaxRecvMsgSize(maxMsg), grpc.MaxSendMsgSize(maxMsg))
 	pb.RegisterCertifierServiceServer(srv, ccaas.NewGRPCCertifierServer(certifier))
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))

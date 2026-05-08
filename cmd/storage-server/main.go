@@ -19,7 +19,8 @@ func main() {
 	flag.Parse()
 
 	store := storage.NewMemStore()
-	srv := grpc.NewServer()
+	const maxMsg = 256 * 1024 * 1024
+	srv := grpc.NewServer(grpc.MaxRecvMsgSize(maxMsg), grpc.MaxSendMsgSize(maxMsg))
 	pb.RegisterStorageServiceServer(srv, storage.NewGRPCStorageServer(store))
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))

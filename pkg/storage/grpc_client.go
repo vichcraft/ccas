@@ -3,6 +3,7 @@ package storage
 import (
 	"context"
 	"errors"
+	"log"
 
 	"github.com/vichcraft/ccas/pkg/types"
 	pb "github.com/vichcraft/ccas/proto/ccaspb"
@@ -56,12 +57,15 @@ func (c *GRPCStoreClient) ApplyCommit(record types.CommitRecord) error {
 }
 
 func (c *GRPCStoreClient) LoadInitialData(data map[string]string) {
-	_, _ = c.client.LoadInitialData(context.Background(), &pb.LoadInitialDataRequest{Data: data})
+	if _, err := c.client.LoadInitialData(context.Background(), &pb.LoadInitialDataRequest{Data: data}); err != nil {
+		log.Printf("storage.LoadInitialData(%d records) failed: %v", len(data), err)
+	}
 }
 
 func (c *GRPCStoreClient) DumpState() map[string]types.ReadResult {
 	resp, err := c.client.DumpState(context.Background(), &pb.DumpStateRequest{})
 	if err != nil {
+		log.Printf("storage.DumpState failed: %v", err)
 		return nil
 	}
 	result := make(map[string]types.ReadResult, len(resp.Entries))
