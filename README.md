@@ -1,17 +1,16 @@
 # CCaaS — Certification-as-a-Service Prototype
 
-A Go implementation of the three-layer **Certification-as-a-Service** architecture from
-_"Don't Look Back, Look into the Future: Certification-as-a-Service Transactions"_
-(Aguilera et al.). The system disaggregates a transactional KV system into three independent
+A Go implementation of the three-layer **Concurrency Control as a Service** architecture from
+_"VLDB 2025"_ (Zhou et al.). The system disaggregates a transactional KV system into three independent
 processes that communicate over gRPC:
 
 | Layer     | Binary           | Default port | Responsibility                                              |
 | --------- | ---------------- | ------------ | ----------------------------------------------------------- |
 | Storage   | `storage-server` | `:50051`     | In-memory KV store, single source of truth                  |
 | Certifier | `ccaas-server`   | `:50052`     | Optimistic concurrency control (immediate or epoch-batched) |
-| Client    | `demo` (or YCSB) | —            | Runs transactions, talks to both layers                     |
+| Execution | `demo` (or YCSB) | —            | Runs transactions, talks to both layers                     |
 
-The original paper PDF is at [`CCaS_Paper.pdf`](CCaS_Paper.pdf).
+The original paper is available on arXiv: [`arXiv:2603.13897`](https://arxiv.org/abs/2603.13897).
 
 ---
 
