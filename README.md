@@ -1,4 +1,4 @@
-# CCaaS — Certification-as-a-Service Prototype
+# CCaaS — Concurrency Control as a Service Prototype
 
 A Go implementation of the three-layer **Concurrency Control as a Service** architecture from
 _"VLDB 2025"_ (Zhou et al.). The system disaggregates a transactional KV system into three independent
