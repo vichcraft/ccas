@@ -106,3 +106,15 @@ proto/ccaspb/       # gRPC service definitions
 scripts/            # local-* helpers (this README) and cloud orchestration
 terraform/          # GCP provisioning for the cloud benchmark (optional)
 ```
+
+---
+
+## Team & contributions
+
+We split the work along architectural boundaries — Shubh worked on the algorithmic core and experimental analysis, Vishwesh worked on the cloud deployment and the YCSB integration.
+
+**Vishwesh Krishna Hariharakrishnan** led the cloud deployment and the benchmarking framework. Vishwesh wrote the Terraform provisioning for our three-VM AWS topology, the entire `Makefile` + `scripts/` orchestration layer that runs the cloud deployment, the fork of `pingcap/go-ycsb` with our custom CCaaS binding plus the transactional run-loop that wraps non-transactional YCSB into per-transaction read-sets and write-sets. Vishwesh also wrote the post-experiment analysis pipeline that produces the five plots and summary tables.
+
+**Shubh Sanghvi** led the algorithmic implementation. Shubh wrote the storage layer, both certifier modes (immediate and epoch-batched) with their deterministic accept/abort logic, the execution-side transaction engine with read-your-own-writes via a local write buffer, and the gRPC service definitions. He also handled the bank-transfer correctness test that anchors our integration test suite.
+
+We collaborated on the architecture-level design decisions together; the single-master certifier, the in-memory KV, and the choice to skip Raft replication.
