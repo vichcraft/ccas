@@ -11,8 +11,7 @@ processes that communicate over gRPC:
 | Certifier | `ccaas-server`   | `:50052`     | Optimistic concurrency control (immediate or epoch-batched) |
 | Client    | `demo` (or YCSB) | —            | Runs transactions, talks to both layers                     |
 
-The companion paper PDF is at [`CCaS_Paper.pdf`](CCaS_Paper.pdf) and a mapping from paper to
-code lives in [`paper-vs-implementation.md`](paper-vs-implementation.md).
+The original paper PDF is at [`CCaS_Paper.pdf`](CCaS_Paper.pdf).
 
 ---
 
